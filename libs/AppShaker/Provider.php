@@ -8,17 +8,18 @@ include_once __DIR__.'/Templating/PresenterFileTemplate.php';
 include_once __DIR__.'/Tools/FinderProvider.php';  /** @todo přeřadit jinam, sem se moc nehodí */
 include_once __DIR__.'/DIContainer.php';
 include_once __DIR__.'/Services/DibiProxy.php';
+include_once __DIR__.'/Config.php';
 use \AppShaker\Routing\Router, 
     \AppShaker\Routing\UrlRoute,
     \AppShaker\Templating\PresenterFileTemplate, 
     \AppShaker\Tools\FinderProvider, 
     \AppShaker\DIContainer, 
-    \AppShaker\Services\DibiProxy;
+    \AppShaker\Services\DibiProxy,
+    \AppShaker\Config;
     
 use \Nette\Config\Config as ArrayHash, 
-    \Nette\Config\Config, 
     \Nette\Finder, 
-    \Nette\Utils\ArrayTools as Arrays, 
+    \Nette\ArrayTools as Arrays, 
     \Nette\Debug as Debugger, 
     \Nette\Environment, 
     \Nette\Loaders\RobotLoader,
@@ -48,7 +49,7 @@ class Provider
     /** @var Router $router  kontejner na routy */
     protected $router;
     
-    /** @var \Nette\ArrayHash $config */
+    /** @var Container $config */
     protected $config;
     
     /** @var DIContainer $diContainer  kontejner pro (továrničky na) služby */
@@ -65,7 +66,7 @@ class Provider
         // 1) Inicializace třídních proměnných
         $this->args = array();
         $this->router = new Router();
-        $this->config = new ArrayHash();
+        $this->config = new Container();
         $this->onStartup = array();
         
         
@@ -271,8 +272,8 @@ class Provider
         
         /** @todo automatická detekce prostředí? */
         foreach($files as $file) {
-            $config = Config::fromFile();
-            $this->config = Arrays::mergeTree($this->config, $config);
+            $config = Config::fromFile($file);
+            $this->config = Container::fromArray( Arrays::mergeTree($this->config->toArray(), $config) );
         }
     }
     
