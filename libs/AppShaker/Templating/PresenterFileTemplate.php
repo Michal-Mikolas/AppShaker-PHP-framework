@@ -68,6 +68,17 @@ class PresenterFileTemplate implements \ArrayAccess
             $this->template->registerHelper('escapeJs', '\Nette\Templates\TemplateHelpers::escapeJs');
             $this->template->registerHelper('escapeCss', '\Nette\Templates\TemplateHelpers::escapeCss');
     
+            $this->template->registerHelper('escape', '\Nette\Templates\TemplateHelpers::escapeHtml');
+            $this->template->registerHelper('escapeUrl', 'rawurlencode');
+            $this->template->registerHelper('stripTags', 'strip_tags');
+            $this->template->registerHelper('nl2br', 'nl2br');
+            $this->template->registerHelper('substr', 'iconv_substr');
+            $this->template->registerHelper('repeat', 'str_repeat');
+            $this->template->registerHelper('replaceRE', '\Nette\String::replace');
+            $this->template->registerHelper('implode', 'implode');
+            $this->template->registerHelper('number', 'number_format');
+            $this->template->registerHelperLoader('Nette\Templates\TemplateHelpers::loader');
+    
             $this->template->registerHelper('ucfirst', function($text){ return ucfirst($text); });
             $this->template->registerHelper('lcfirst', function($text){ return lcfirst($text); });
         }
@@ -93,7 +104,7 @@ class PresenterFileTemplate implements \ArrayAccess
     public function set($name, $value)
     {
         if ($this->template) {
-            $this->template->__set($name, $value);
+            $this->template->$name = $value;
         } else {
             self::$statics['variables'][$name] = $value;
         }
@@ -129,6 +140,10 @@ class PresenterFileTemplate implements \ArrayAccess
      */
     public function render()
     {
+        // Default detected variables
+        $this->template->basePath = app()->basePath;
+        
+        // "Static" variables and controls
         foreach(self::$statics['variables'] as $key=>$value){
             if (!isset($this->template->$key)) {
                 $this->template->$key = $value;
@@ -140,8 +155,10 @@ class PresenterFileTemplate implements \ArrayAccess
             }
         }
         
+        // Render
         $this->template->render();
         
+        // Snippets support
         if ($this->isAjax()) {
             echo Json::encode($this->payload);
         }

@@ -71,7 +71,7 @@ class Provider
         
         
         // 2) Detect application variables
-        $this->detectDirectories();
+        $this->detectPaths();
 
         
         // 3) Debugger
@@ -142,10 +142,10 @@ class Provider
     }
     
     /**
-     * Automatická detekce adresářů aplikace
+     * Automatická detekce cest v aplikaci
      * @return void     
      */
-    protected function detectDirectories()
+    protected function detectPaths()
     {
         // wwwDir
         $www_dir = preg_replace('#[\\/][^\\/]*$#', '', $_SERVER['SCRIPT_FILENAME']);
@@ -170,6 +170,16 @@ class Provider
         }
         
         Environment::setVariable('tempDir', $this->get('tempDir'));
+        
+        //basePath
+        if (isset($_GET['route'])) {
+            $route_regexp = preg_quote(@$_GET['route'], '#');
+            $base_path = preg_replace("#$route_regexp.*$#", '', $_SERVER['REQUEST_URI']);
+        } else {
+            $base_path = $_SERVER['REQUEST_URI'];
+        }
+        $base_path = rtrim($base_path, '/');
+        $this->set('basePath', $base_path);
     }
     
     /**
