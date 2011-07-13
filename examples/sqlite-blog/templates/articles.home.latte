@@ -1,0 +1,18 @@
+{extends '@layout.latte'}
+
+
+{block #content}
+    {foreach $articles as $article}
+      <div class="post">
+        <h2 class="title"><a href="{$basePath}/clanky/{$article->name_slug}.html">{$article->name}</a></h2>
+        <div style="clear: both;">&nbsp;</div>
+        <div class="entry">
+          <p>{!$article->content_html|truncate:300}</p>
+          <p class="links"><a href="{$basePath}/clanky/{$article->name_slug}.html">Více zde</a></p>
+        </div>
+      </div>
+      {if $iterator->counter>=3}{? break; }{/if}  {*chci vypsat jen první 3 články*}
+    {/foreach}
+    
+    <div class="more-articles">Další články naleznete vpravo v menu &gt;&gt;</div>
+{/block}

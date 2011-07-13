@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Wellness  
+Description: A two-column, fixed-width design with dark color scheme.
+Version    : 1.0
+Released   : 20100110
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>{block #title}SQLite Blog{/block}</title>
+  <link href="{$basePath}/templates/style.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+<div id="wrapper">
+  <div id="header-wrapper">
+  <div id="header">
+    <div id="logo">
+      <h1><a href="{$basePath}">SQLite Blog</a></h1>
+      <p> an example of <a href="http://wiki.webshake.cz/doku.php?id=public:appshaker:start">AppShaker PHP framework</a></p>
+    </div>
+  </div>
+  </div>
+  <!-- end #header -->
+  <div id="page">
+  <div id="page-bgtop">
+  <div id="page-bgbtm">
+    <div id="content">
+      
+      {foreach $flashes as $flash}
+        <div class="flash-{$flash->type}">{$flash->message}</div>
+      {/foreach}
+      
+      {block #content}
+      {/block}
+      
+      <div style="clear: both;">&nbsp;</div>
+    </div>
+    <!-- end #content -->
+    <div id="sidebar">
+      <ul>
+        <li>
+          <h2>O mě</h2>
+          <p>Jsem takový normální 23-letý puberťák, a jako většina mých kamarádů, i já jsem chtěl mít svůj vlastní framework. </p>
+        </li>
+        <li>
+          <h2>Archiv</h2>
+          <ul>
+            {foreach $articles as $article}
+            <li><a href="{$basePath}/clanky/{$article->name_slug}.html">{$article->name}</a></li>
+            {/foreach}
+          </ul>
+        </li>
+        <li>
+          <h2>Administrace</h2>
+          <ul>
+            <li><a href="{$basePath}/admin/pridat-clanek.html">Přidat článek</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- end #sidebar -->
+    <div style="clear: both;">&nbsp;</div>
+  </div>
+  </div>
+  </div>
+  <!-- end #page -->
+</div>
+  <div id="footer">
+    <p>Copyright (c) {=date("Y")} {=$_SERVER['HTTP_HOST']}. All rights reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
+  </div>
+  <!-- end #footer -->
+</body>
+</html>

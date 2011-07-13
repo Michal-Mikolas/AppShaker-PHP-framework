@@ -1,0 +1,16 @@
+{extends '@layout.latte'}
+
+
+{block #content}
+      <div class="post">
+        <h2 class="title"><a href="{$basePath}/clanky/{$article->name_slug}.html">{$article->name}</a></h2>
+        <div style="clear: both;">&nbsp;</div>
+        <div class="entry">
+          <p>{!$article->content_html}</p>
+          <p class="links">
+            Odkaz na tento článek: 
+            <a href="{$basePath}/clanky/{$article->name_slug}.html">http://{=$_SERVER['HTTP_HOST']}{$basePath}/clanky/{$article->name_slug}.html</a>
+          </p>
+        </div>
+      </div>
+{/block}
