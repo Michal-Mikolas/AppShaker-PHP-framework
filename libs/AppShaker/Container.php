@@ -177,8 +177,7 @@ class Container /*extends \Nette\Object*/ implements \ArrayAccess, \Iterator
     public function key()
     {
         $entry = array_slice($this->data, $this->i, 1);
-        $entry = array_flip($entry);
-        return array_pop($entry);
+        return key($entry);
     }
 
     /**
