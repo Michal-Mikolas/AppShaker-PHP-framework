@@ -2,6 +2,8 @@
 
 namespace AppShaker\Templating;
 
+use \AppShaker\Container;
+
 use \Nette\Json,
     \Nette\Application\Presenter,  
     \Nette\Templates\FileTemplate, 
@@ -27,6 +29,9 @@ class ZeroPresenter extends Presenter {}
  * 
  * @author  Michal Mikoláš <xxxObiWan@gmail.com> 
  * @package AppShaker
+ * 
+ * @todo tuším, že pro novou verzi Nette půjde PresenterFileTemplate 
+ *      napsat daleko jednodušeji
  */
 class PresenterFileTemplate implements \ArrayAccess
 {
@@ -143,6 +148,18 @@ class PresenterFileTemplate implements \ArrayAccess
         // Default detected variables
         $this->template->basePath = app()->basePath;
         
+        // Flash messages
+        $this->template->flashes = array();
+        if (isset($_SESSION['AppShaker']['flashes'])) {
+            foreach($_SESSION['AppShaker']['flashes'] as $key=>$flash){
+                if ($flash->expires < time()) {
+                    unset($_SESSION['AppShaker']['flashes'][$key]);
+                } else {
+                    $this->template->flashes[] = $flash;
+                }
+            }
+        }        
+        
         // "Static" variables and controls
         foreach(self::$statics['variables'] as $key=>$value){
             if (!isset($this->template->$key)) {
@@ -170,9 +187,15 @@ class PresenterFileTemplate implements \ArrayAccess
      */         
     public function __toString()
     {
-        ob_start();
-        $this->render();
-        $output = ob_get_clean();
+        try{
+            ob_start();
+            $this->render();
+            $output = ob_get_clean();
+        } catch (\Exception $e) {
+            ob_start();
+            dump($e);
+            $output = ob_get_clean();
+        }
         
         return $output;
     }
@@ -249,7 +272,23 @@ class PresenterFileTemplate implements \ArrayAccess
     public function offsetUnset($name)
     {
         unset($this->presenter[$name]);
-    } 
+    }
+    
+    /**
+     * Náhrada za původní Nette\Application\UI\Control::flashMessage()
+     * @param string $message
+     * @param string $type
+     * @return void               
+     */
+    public function flashMessage($message, $type = 'info')
+    {
+        $flash = new Container();
+        $flash->message = $message;
+        $flash->type = $type;
+        $flash->expires = time() + 5;
+        
+        $_SESSION['AppShaker']['flashes'][] = $flash;
+    }                   
     
     
     /********************* Původní metody Presenteru *********************/

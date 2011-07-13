@@ -76,6 +76,7 @@ class Provider
         
         // 3) Debugger
         /** 
+         * @todo nastavit Debugger jako službu        
          * @todo připojit k DebugBaru TimerPanel, StopWatch (nastavit 
          *       jako službu) atd. 
          */
@@ -484,16 +485,30 @@ class Provider
     
     /**
      * @param string $key  klíč routy, nebo url adresa pro přesměrování
+     * @param array $args     
      *         
      * @todo dodělat
      */
-    public function redirect($key, $args){
+    public function redirect($key, $args = NULL)
+    {
+        // Absolutní adresa
+        if (preg_match('#^(http|https)://#i', $key)) {
+            header("location: $key");
+            die();
+        }
+        
+        // Klíč routy
+        
+        // Relativní adresa
+        header("location: http://" . $_SERVER['HTTP_HOST'] . app()->basePath . $key);
+        die();
     }
     
     /**
      * @todo dodělat
      */
-    public function isActive($key, $args){
+    public function isActive($key, $args)
+    {
     }                               
     
     
