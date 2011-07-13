@@ -63,18 +63,22 @@ class Provider
      */         
     private function __construct()
     {
-        // 1) Inicializace třídních proměnných
+        // 1) Start sessions
+        if (!isset($_SESSION)) session_start();
+        
+        
+        // 2) Inicializace třídních proměnných
         $this->args = array();
         $this->router = new Router();
         $this->config = new Container();
         $this->onStartup = array();
         
         
-        // 2) Detect application variables
+        // 3) Detect application variables
         $this->detectPaths();
 
         
-        // 3) Debugger
+        // 4) Debugger
         /** 
          * @todo nastavit Debugger jako službu        
          * @todo připojit k DebugBaru TimerPanel, StopWatch (nastavit 
@@ -94,7 +98,7 @@ class Provider
         Debugger::$logDirectory = $log_directory;
         
         
-        // 4) Registrace základních služeb
+        // 5) Registrace základních služeb
         $this->diContainer = new DIContainer();
         
         // Dibi
