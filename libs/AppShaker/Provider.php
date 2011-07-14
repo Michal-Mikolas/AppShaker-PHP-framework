@@ -280,7 +280,7 @@ class Provider
          *        P.S. možná je to blbost a nepůjde to, každopádně se podívat 
          *        na register_shutdown_function(), jestli by se nedala použít                           
          */
-        $files = Finder::findFiles($path)->from($this->get('wwwDir'));
+        $files = Finder::findFiles($path)->in($this->get('wwwDir'));
         
         /** @todo má tenhle příkaz cenu? neřadí už to Finder automaticky? */
         @sort($files);
