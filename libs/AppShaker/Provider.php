@@ -2,6 +2,8 @@
 
 namespace AppShaker;
 
+include_once __DIR__.'/3rdParty/Stopwatch.php';
+
 include_once __DIR__.'/Routing/Router.php';
 include_once __DIR__.'/Routing/IRoute.php';
 include_once __DIR__.'/Templating/PresenterFileTemplate.php';
@@ -73,7 +75,7 @@ class Provider
         $this->config = new Container();
         $this->onStartup = array();
         
-        
+
         // 3) Detect application variables
         $this->detectPaths();
 
@@ -98,7 +100,8 @@ class Provider
         Debugger::$logDirectory = $log_directory;
         
         
-        // 5) Registrace základních služeb
+        // 5) Registrace defaultních služeb
+        /** @todo $this->registerServices(); */
         $this->diContainer = new DIContainer();
         
         // Dibi
@@ -117,6 +120,12 @@ class Provider
             return $loader;
         });
         $this->diContainer->getService('robotloader')->register();
+        
+        // Stopwatch
+        $this->diContainer->addService('stopwatch', function(){
+            return new \Stopwatch();
+        });
+        Debugger::addPanel( $this->diContainer->getService('stopwatch') );
     }
     
     /**
