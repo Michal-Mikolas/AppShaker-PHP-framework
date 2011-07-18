@@ -166,6 +166,11 @@ class Provider
         $this->set('wwwDir', $www_dir);
         
         Environment::setVariable('wwwDir', $this->get('wwwDir'));
+
+        // appDir
+        $this->set('appDir', $this->get('wwwDir'));
+        
+        Environment::setVariable('appDir', $this->get('wwwDir'));
         
         // tempDir
         $temp_dir = $this->get('wwwDir') . '/temp';
