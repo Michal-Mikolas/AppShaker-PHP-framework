@@ -167,8 +167,8 @@ class PresenterFileTemplate implements \ArrayAccess
             }
         }
         foreach(self::$statics['controls'] as $key=>$value){
-            if (!isset($this->template[$key])) {
-                $this->template[$key] = $value;
+            if (!isset($this->presenter[$key])) {
+                $this->presenter[$key] = $value;
             }
         }
         
@@ -239,7 +239,7 @@ class PresenterFileTemplate implements \ArrayAccess
         if ($this->presenter[$name])
             return $this->presenter[$name];
         else
-            return self::$static['controls'][$name];
+            return self::$statics['controls'][$name];
     }
     
     /**
@@ -250,8 +250,11 @@ class PresenterFileTemplate implements \ArrayAccess
      */         
     public function offsetSet($name, $value)
     {
-        
-        return $this->presenter[$name] = $value;
+        if ($this->template) {
+            return $this->presenter[$name] = $value;
+        } else {
+            return self::$statics['controls'][$name] = $value;
+        }
     }
     
     /**
@@ -261,7 +264,7 @@ class PresenterFileTemplate implements \ArrayAccess
      */         
     public function offsetExists($name)
     {
-        return isset($this->presenter[$name]);
+        return (isset($this->presenter[$name]) || isset(self::$statics['controls'][$name]));
     }
     
     /**
