@@ -66,7 +66,7 @@ class Provider
     private function __construct()
     {
         // 1) Start sessions
-        if (!isset($_SESSION)) session_start();
+        if (!isset($_SESSION)) Environment::getSession()->start();
         
         
         // 2) Inicializace třídních proměnných
